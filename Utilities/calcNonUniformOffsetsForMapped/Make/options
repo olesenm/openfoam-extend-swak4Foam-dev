@@ -1,4 +1,4 @@
-include $(OBJECTS_DIR)/../../../../Libraries/rules/versionOptions
+include $(MAKE_DIR)/../../../Libraries/rules/versionOptions
 
 EXE_INC = -I$(LIB_SRC)/cfdTools/lnInclude \
           -I$(LIB_SRC)/cfdTools/general/lnInclude \

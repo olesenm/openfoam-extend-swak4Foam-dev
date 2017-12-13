@@ -1,8 +1,7 @@
-
-include $(OBJECTS_DIR)/../../../rules/versionOptions
+include $(MAKE_DIR)/../../rules/versionOptions
 
 EXE_INC = -I$(OBJECTS_DIR) \
-	$(FOAM_DEV_OPTION) 	\
+    $(FOAM_DEV_OPTION) 	\
     -I$(LIB_SRC)/finiteVolume/lnInclude \
     -I$(LIB_SRC)/surfMesh/lnInclude \
     -I$(LIB_SRC)/sampling/lnInclude \

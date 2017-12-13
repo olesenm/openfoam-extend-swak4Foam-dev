@@ -1,5 +1,4 @@
-
-include $(OBJECTS_DIR)/../../../../../Libraries/rules/versionOptions
+include $(MAKE_DIR)/../../../../Libraries/rules/versionOptions
 
 ifdef FOAM_DEV
 FOAM_DEV_LIBS = -lswakFiniteArea -lfiniteArea

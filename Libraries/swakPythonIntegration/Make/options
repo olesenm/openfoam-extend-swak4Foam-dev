@@ -1,4 +1,4 @@
-include $(OBJECTS_DIR)/../../../rules/versionOptions
+include $(MAKE_DIR)/../../rules/versionOptions
 
 EXE_INC = \
         $(FOAM_DEV_OPTION) \

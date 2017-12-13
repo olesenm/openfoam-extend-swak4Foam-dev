@@ -3,7 +3,7 @@
 # Note: This script is meant to be used directly from the library folder that
 # has Bison based parsers.
 # In addition, the file "Make/options" for that library should include this line:
-#   sinclude $(OBJECTS_DIR)/../mydependencies
+#   sinclude $(MAKE_DIR)/mydependencies
 #
 # The "sinclude" means that it will only include if found.
 
@@ -13,11 +13,12 @@ wclean libso
 # Forcefully generate the lnInclude folder and then create dummy files for the
 # expected ".tab.hh" files
 wmakeLnInclude .
-grep --no-filename tab.hh *.[CHyl]* | sed -e 's=#include\ *"==' -e 's="\ *$==' | \
+grep --no-filename tab.hh *.[CHyl]* | \
+  sed -e 's=#include\ *"==' -e 's="\ *$==' | \
   sort -u | xargs -I {} touch lnInclude/{}
 
 # Take out the current version of Make/mydependencies and make a dummy
-[ -e Make/mydependencies ] && rm Make/mydependencies
+rm -f Make/mydependencies 2>/dev/null
 touch Make/mydependencies
 
 # Generate the *.dep files, which will tag for us which files need the

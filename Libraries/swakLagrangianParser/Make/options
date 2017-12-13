@@ -1,13 +1,13 @@
-include $(OBJECTS_DIR)/../../../../Libraries/rules/versionOptions
+include $(MAKE_DIR)/../../../Libraries/rules/versionOptions
 
 ifeq "$(WMAKE_NEW_CONVENTION)" "new"
-  include $(OBJECTS_DIR)/../mybisonNew
-  include $(OBJECTS_DIR)/../myflexNew
+  include $(MAKE_DIR)/mybisonNew
+  include $(MAKE_DIR)/myflexNew
 else
-  include $(OBJECTS_DIR)/../mybison
-  include $(OBJECTS_DIR)/../myflex
+  include $(MAKE_DIR)/mybison
+  include $(MAKE_DIR)/myflex
 
-  sinclude $(OBJECTS_DIR)/../mydependencies
+  sinclude $(MAKE_DIR)/mydependencies
 endif
 
 ifdef FOAM_DEV
