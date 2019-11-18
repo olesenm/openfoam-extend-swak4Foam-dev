@@ -49,7 +49,7 @@ Contributors/Copyright:
 
 #include "swak.H"
 
-#include "exprString.H"
+#include "swakExprString.H"
 
 #ifdef FOAM_HAS_FVOPTIONS
 #ifdef FOAM_FVOPTIONS_IN_FV
