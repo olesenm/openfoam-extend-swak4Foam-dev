@@ -256,13 +256,18 @@ Foam::label Foam::EliminateOutsideParticles<CloudType>::checkInside(Cloud<parcel
     label cnt=0;
     label outCnt=0;
 
-    forAllIter(typename CloudType,this->owner(),iter) {
-        parcelType &p=iter();
-        label oldCellI=p.cell();
-        label cellI=search_.findCell(
-            p.position(),
-            oldCellI
-        );
+    #if OPENFOAM >= 1812
+    for (parcelType& p : this->owner())
+    {
+    #else
+    forAllIter(typename CloudType,this->owner(),iter)
+    {
+        parcelType &p = iter();
+    #endif
+
+        const label oldCellI = p.cell();
+        const label cellI = search_.findCell(p.position(), oldCellI);
+
         if(
             cellI<0
             // ||

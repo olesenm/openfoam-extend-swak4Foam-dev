@@ -402,12 +402,21 @@ tmp<Field<RType> > CloudProxyForParticle<CloudType>::mapToParticles(
     );
     Field<RType> &result=const_cast<Field<RType>&>(tResult());
     label i=0;
+
+    #if OPENFOAM >= 1812
+    for (const particleType& p : theCloud())
+    {
+        result[i] = f(&p);
+        ++i;
+    }
+    #else
     forAllConstIter(typename CloudType,theCloud(),it)
     {
-	const particleType &p=(*it);
-        result[i]=f(&p);
-        i++;
+        const particleType &p = (*it);
+        result[i] = f(&p);
+        ++i;
     }
+    #endif
 
     return tResult;
 }

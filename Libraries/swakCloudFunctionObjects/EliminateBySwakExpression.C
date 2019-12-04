@@ -268,24 +268,35 @@ Foam::label Foam::EliminateBySwakExpression<CloudType>::checkExpression(Cloud<pa
     Field<bool> conditionField(driver_.getResult<bool>());
     assert(conditionField.size()==this->owner().size());
 
-    label cnt=0;
+    const label oldCount = eliminate.size();
+
     label nr=0;
 
-    forAllIter(typename CloudType,this->owner(),iter) {
-        parcelType &p=iter();
-        if(
-            conditionField[nr]
-        ) {
-            cnt++;
-            eliminate.append(
-                p.clone(this->owner().mesh()).ptr()
-            );
+    #if OPENFOAM >= 1812
+    for (parcelType& p : this->owner())
+    {
+        if (conditionField[nr])
+        {
+            eliminate.append(p.clone(this->owner().mesh()).ptr());
             this->owner().deleteParticle(p);
         }
-        nr++;
+        ++nr;
     }
+    #else
+    forAllIter(typename CloudType,this->owner(),iter)
+    {
+        parcelType &p = iter();
 
-    return cnt;
+        if (conditionField[nr])
+        {
+            eliminate.append(p.clone(this->owner().mesh()).ptr());
+            this->owner().deleteParticle(p);
+        }
+        ++nr;
+    }
+    #endif
+
+    return (eliminate.size() - oldCount);  // Number changed
 }
 
 // ************************************************************************* //

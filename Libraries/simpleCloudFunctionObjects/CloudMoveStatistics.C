@@ -116,21 +116,29 @@ void Foam::CloudMoveStatistics<CloudType>::preEvolve()
         << ": Clearing data" << endl;
 
     faceHitCounter_.clear();
-
-    // Initialize with zero to make sure that particles that don't hit faces are counted as well
-    forAllConstIter(typename CloudType, this->owner(), iter) {
-        const typename CloudType::parcelType& p = iter();
-        faceHitCounter_.insert(labelPair(p.origProc(), p.origId()), 0);
-    }
-
     movesCounter_.clear();
-    forAllConstIter(typename CloudType, this->owner(), iter) {
-        const typename CloudType::parcelType& p = iter();
+
+    // Initialize with zero to make sure that particles that
+    // don't hit faces are counted as well
+
+    #if OPENFOAM >= 1812
+    for (const auto& p : this->owner())
+    {
+        faceHitCounter_.insert(labelPair(p.origProc(), p.origId()), 0);
         movesCounter_.insert(labelPair(p.origProc(), p.origId()), 0);
     }
+    #else
+    forAllConstIter(typename CloudType, this->owner(), iter)
+    {
+        const typename CloudType::parcelType& p = iter();
+        faceHitCounter_.insert(labelPair(p.origProc(), p.origId()), 0);
+        movesCounter_.insert(labelPair(p.origProc(), p.origId()), 0);
+    }
+    #endif
 
     patchHitCounter_.clear();
 }
+
 
 template<class CloudType>
 void Foam::CloudMoveStatistics<CloudType>::postEvolve()

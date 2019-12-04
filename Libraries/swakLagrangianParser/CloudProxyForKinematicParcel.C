@@ -216,12 +216,21 @@ tmp<Field<scalar> > CloudProxyForKinematicParcel<CloudType>::weights() const
     );
     Field<scalar> &weight=const_cast<Field<scalar>&>(tWeight());
     label i=0;
+
+    #if OPENFOAM >= 1812
+    for (const auto& p : this->theCloud())
+    {
+        weight[i] = p.nParticle()*p.mass();
+        ++i;
+    }
+    #else
     forAllConstIter(typename CloudType,this->theCloud(),it)
     {
-	const typename CloudProxyForKinematicParcel<CloudType>::particleType &p=(*it);
-        weight[i]=p.nParticle()*p.mass();
-        i++;
+        const typename CloudProxyForKinematicParcel<CloudType>::particleType &p=(*it);
+        weight[i] = p.nParticle()*p.mass();
+        ++i;
     }
+    #endif
 
     return tWeight;
 }

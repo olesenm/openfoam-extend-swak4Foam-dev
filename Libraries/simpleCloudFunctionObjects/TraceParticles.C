@@ -107,16 +107,29 @@ template<class CloudType>
 void Foam::TraceParticles<CloudType>::preEvolve()
 {
     label cnt=0;
-    forAllConstIter(typename CloudType, this->owner(), iter) {
-        const typename CloudType::parcelType& p = iter();
-        if(ids_.found(labelPair(p.origProc(), p.origId()))) {
-            writeParticle(
-                p,
-                "preEvolve"
-            );
-            cnt++;
+
+    #if OPENFOAM >= 1812
+    for (const auto& p : this->owner())
+    {
+        if (ids_.found(labelPair(p.origProc(), p.origId())))
+        {
+            writeParticle(p, "preEvolve");
+            ++cnt;
         }
     }
+    #else
+    forAllConstIter(typename CloudType, this->owner(), iter)
+    {
+        const typename CloudType::parcelType& p = iter();
+
+        if (ids_.found(labelPair(p.origProc(), p.origId())))
+        {
+            writeParticle(p, "preEvolve");
+            ++cnt;
+        }
+    }
+    #endif
+
     reduce(cnt,plusOp<label>());
     Info << this->modelName() << ":" << this->owner().name()
         << ":" << this->modelType()
@@ -146,16 +159,28 @@ template<class CloudType>
 void Foam::TraceParticles<CloudType>::postEvolve()
 {
     label cnt=0;
-    forAllConstIter(typename CloudType, this->owner(), iter) {
-        const typename CloudType::parcelType& p = iter();
-        if(ids_.found(labelPair(p.origProc(), p.origId()))) {
-            writeParticle(
-                p,
-                "postEvolve"
-            );
-            cnt++;
+
+    #if OPENFOAM >= 1812
+    for (const auto& p : this->owner())
+    {
+        if (ids_.found(labelPair(p.origProc(), p.origId())))
+        {
+            writeParticle(p, "postEvolve");
+            ++cnt;
         }
     }
+    #else
+    forAllConstIter(typename CloudType, this->owner(), iter) {
+        const typename CloudType::parcelType& p = iter();
+
+        if (ids_.found(labelPair(p.origProc(), p.origId())))
+        {
+            writeParticle(p, "postEvolve");
+            ++cnt;
+        }
+    }
+    #endif
+
     reduce(cnt,plusOp<label>());
     Info << this->modelName() << ":" << this->owner().name()
         << ":" << this->modelType()
